@@ -1,28 +1,24 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-import 'home.dart';
+import 'package:hack20/home.dart';
 
-List<CameraDescription> cameras;
-
-Future<Null> main() async {
-  try {
-    cameras = await availableCameras();
-  } on CameraException catch (e) {
-    print('Error: $e.code\nError Message: $e.message');
-  }
-  runApp(new MyApp());
+void main() {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'tflite real-time classification',
+      debugShowCheckedModeBanner: false,
+      title: 'FlutterHack20',
       theme: ThemeData(
-        brightness: Brightness.dark,
+        backgroundColor: Colors.white,
+        primarySwatch: Colors.cyan,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: 'NotoSans',
       ),
-      home: HomePage(cameras),
+      home: Home(),
     );
   }
 }

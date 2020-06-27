@@ -1,114 +1,144 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
-import 'dart:math' as math;
+import 'package:hack20/footer.dart';
+import 'package:hack20/picture_picker.dart';
+import 'package:hack20/models/result.dart';
 
-import 'camera.dart';
-import 'render.dart';
-
-const String ssd = "Start Classification";
-
-class HomePage extends StatefulWidget {
-  final List<CameraDescription> cameras;
-
-  HomePage(this.cameras);
+class Home extends StatefulWidget {
+  Home({Key key}) : super(key: key);
 
   @override
-  _HomePageState createState() => new _HomePageState();
+  _HomeState createState() => _HomeState();
 }
 
-class _HomePageState extends State<HomePage> {
-  List<dynamic> _recognitions;
-  int _imageHeight = 0;
-  int _imageWidth = 0;
-  String _model = "";
+class _HomeState extends State<Home> {
+  final ImagePicker _imagePicker = ImagePicker();
+  File _selectedPicture;
+  Result _result;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  loadModel() async {
-    String res;
-
-    switch (_model) {
-      default:
-        res = await Tflite.loadModel(
-          model: "assets/mobilenet_v2_1.0_224.tflite",
-          labels: "assets/labels.txt",
-        );
-
-        break;
+  void pickImage(ImageSource source) async {
+    PickedFile picked = await _imagePicker.getImage(source: source);
+    if (picked != null) {
+      File image = File(picked.path);
+      cropImage(image);
     }
-    print(res);
   }
 
-  onSelect(model) {
-    setState(() {
-      _model = model;
-    });
-    loadModel();
+  void cropImage(File image) async {
+    File croppedImage = await ImageCropper.cropImage(
+      cropStyle: CropStyle.rectangle,
+      sourcePath: image.path,
+      aspectRatio: CropAspectRatio(ratioX: 3, ratioY: 2),
+      maxWidth: 512,
+      maxHeight: 512,
+    );
+
+    if (croppedImage != null && this.mounted) {
+      setState(() {
+        this._selectedPicture = croppedImage;
+        identifyImage(croppedImage);
+      });
+    }
   }
 
-  setRecognitions(recognitions, imageHeight, imageWidth) {
-    setState(() {
-      _recognitions = recognitions;
-      _imageHeight = imageHeight;
-      _imageWidth = imageWidth;
-    });
+  Future<void> identifyImage(File file) async {
+    await Tflite.loadModel(
+        model: "assets/tflite/model.tflite",
+        labels: "assets/tflite/labels.txt",
+        numThreads: 1);
+
+    List<dynamic> recognitions = await Tflite.runModelOnImage(
+      path: file.path,
+      numResults: 1,
+      imageMean: 128,
+      imageStd: 128,
+    );
+
+    if (recognitions.isNotEmpty) {
+      setState(() {
+        _result = Result.fromMap(recognitions.first);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    Size screen = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 28.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text(
+              "Pokédex",
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  .copyWith(color: Colors.black, fontWeight: FontWeight.w700),
+              textAlign: TextAlign.start,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, left: 2.0),
+              child: Text(
+                "Select a picture to indentify the pókemon!",
+                textAlign: TextAlign.start,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 36.0),
+              child: PicturePicker(
+                  imageFile: _selectedPicture,
+                  shape: BoxShape.rectangle,
+                  width: MediaQuery.of(context).size.width - 56,
+                  onTap: () => pickImage(ImageSource.gallery)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 28.0, bottom: 12),
+              child: Divider(),
+            ),
+            if (_result != null) buildResult(context),
+            Spacer(),
+            Footer(),
+          ],
+        ),
+      ),
+    );
+  }
 
-    return RotatedBox(
-        quarterTurns: 1,
-        child: Scaffold(
-          appBar: PreferredSize(
-              preferredSize: Size.fromHeight(20.0),
-              child: AppBar(
-                  centerTitle: true,
-                  title: const Text('TFlite Real Time Classification'))),
-          body: _model == ""
-              ? Center(
-                  child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/bg3.png"),
-                      fit: BoxFit.fill,
-                    ),
+  Padding buildResult(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              _result.label,
+              style: Theme.of(context).textTheme.headline5.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    height: 1,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ButtonTheme(
-                        child: RaisedButton(
-                          child: Text(ssd, style: TextStyle(fontSize: 25.0)),
-                          onPressed: () => onSelect(ssd),
-                        ),
-                      )
-                    ],
-                  ),
-                ))
-              : Stack(
-                  children: [
-                    RotatedBox(
-                        quarterTurns: -1,
-                        child: Camera(
-                          widget.cameras,
-                          _model,
-                          setRecognitions,
-                        )),
-                    Render(
-                      _recognitions == null ? [] : _recognitions,
-                      math.max(_imageHeight, _imageWidth),
-                      math.min(_imageHeight, _imageWidth),
-                      screen.height,
-                      screen.width,
-                    ),
-                  ],
+            ),
+          ),
+          Text(
+            '${(_result.confidence * 100).toStringAsFixed(2)} %',
+            style: Theme.of(context).textTheme.headline6.copyWith(
+                  color: Colors.grey[800],
+                  fontWeight: FontWeight.w400,
+                  height: 1,
                 ),
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
