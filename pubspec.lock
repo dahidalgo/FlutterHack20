@@ -16,7 +16,7 @@ packages:
     source: hosted
     version: "2.0.0"
   camera:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: camera
       url: "https://pub.dartlang.org"
@@ -96,14 +96,14 @@ packages:
     source: hosted
     version: "3.1.4"
   image_cropper:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: image_cropper
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.3"
   image_picker:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: image_picker
       url: "https://pub.dartlang.org"
@@ -199,7 +199,7 @@ packages:
     source: hosted
     version: "0.2.17"
   tflite:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: tflite
       url: "https://pub.dartlang.org"
