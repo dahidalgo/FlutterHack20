@@ -1,4 +1,4 @@
-# hack20
+# FlutterHack20
 
 A new Flutter project.
 
