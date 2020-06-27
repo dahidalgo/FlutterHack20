@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'FlutterHack20',
       theme: ThemeData(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.green,
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'NotoSans',

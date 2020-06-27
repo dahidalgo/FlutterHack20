@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              "Pokédex",
+              "Recycling",
               style: Theme.of(context)
                   .textTheme
                   .headline4
@@ -88,7 +88,7 @@ class _HomeState extends State<Home> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 2.0),
               child: Text(
-                "Select a picture to indentify the pókemon!",
+                "Select a picture to start!",
                 textAlign: TextAlign.start,
               ),
             ),

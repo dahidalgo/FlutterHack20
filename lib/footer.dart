@@ -18,14 +18,14 @@ class Footer extends StatelessWidget {
                   text: TextSpan(
                       style: Theme.of(context).textTheme.caption,
                       children: [
-                        TextSpan(text: 'Built with '),
+                        TextSpan(text: 'Made for '),
                         TextSpan(
-                            text: 'passion',
+                            text: 'Flutter',
                             style: Theme.of(context).textTheme.caption.copyWith(
                                   fontWeight: FontWeight.w700,
                                 )),
                         TextSpan(
-                          text: ' by Andrés Sanabria',
+                          text: ' #Hack20',
                         ),
                       ]))),
         ));
