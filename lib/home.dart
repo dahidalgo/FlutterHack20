@@ -19,11 +19,15 @@ class _HomeState extends State<Home> {
   File _selectedPicture;
   Result _result;
 
-  void pickImage(ImageSource source) async {
-    PickedFile picked = await _imagePicker.getImage(source: source);
-    if (picked != null) {
-      File image = File(picked.path);
-      cropImage(image);
+  Future pickImage() async {
+    PickedFile pickedFile =
+        await _imagePicker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      setState(() {
+        _selectedPicture = file;
+      });
+      identifyImage(file);
     }
   }
 
@@ -44,11 +48,11 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future<void> identifyImage(File file) async {
-    await Tflite.loadModel(
-        model: "assets/tflite/model.tflite",
-        labels: "assets/tflite/labels.txt",
-        numThreads: 1);
+  Future identifyImage(File file) async {
+    String res = await Tflite.loadModel(
+      model: "assets/tflite/model_unquant.tflite",
+      labels: "assets/tflite/labels.txt",
+    );
 
     List<dynamic> recognitions = await Tflite.runModelOnImage(
       path: file.path,
@@ -58,9 +62,10 @@ class _HomeState extends State<Home> {
     );
 
     if (recognitions.isNotEmpty) {
-      setState(() {
+      print(recognitions);
+      /*setState(() {
         _result = Result.fromMap(recognitions.first);
-      });
+      });*/
     }
   }
 
@@ -98,7 +103,7 @@ class _HomeState extends State<Home> {
                   imageFile: _selectedPicture,
                   shape: BoxShape.rectangle,
                   width: MediaQuery.of(context).size.width - 56,
-                  onTap: () => pickImage(ImageSource.gallery)),
+                  onTap: () => pickImage()),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 28.0, bottom: 12),
