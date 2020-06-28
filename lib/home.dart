@@ -121,26 +121,41 @@ class _HomeState extends State<Home> {
   Padding buildResult(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 6.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+      child: Column(
         children: <Widget>[
-          Expanded(
-            child: Text(
-              _result.label,
-              style: Theme.of(context).textTheme.headline5.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    height: 1,
+          Card(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 7,
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          _result.label,
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                height: 1,
+                              ),
+                        ),
+                        Text(
+                          '${(_result.confidence * 100).toStringAsFixed(2)} %',
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                                color: Colors.grey[800],
+                                fontWeight: FontWeight.w400,
+                                height: 1,
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
-            ),
-          ),
-          Text(
-            '${(_result.confidence * 100).toStringAsFixed(2)} %',
-            style: Theme.of(context).textTheme.headline6.copyWith(
-                  color: Colors.grey[800],
-                  fontWeight: FontWeight.w400,
-                  height: 1,
                 ),
+              ],
+            ),
           ),
         ],
       ),
