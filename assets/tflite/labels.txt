@@ -1,3 +1,4 @@
 Botellas
 Latas
 Cartón
+Otros
