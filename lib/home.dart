@@ -70,7 +70,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.green[300],
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.green[900],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 28.0),

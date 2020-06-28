@@ -125,7 +125,7 @@ class PicturePicker extends StatelessWidget {
   Widget buildPlaceholderImage(BuildContext context) {
     return Center(
         child: Image.asset(
-      'assets/img/reciclaje.png',
+      'assets/img/upload.png',
       fit: BoxFit.contain,
     ));
   }
