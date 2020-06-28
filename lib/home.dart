@@ -63,9 +63,9 @@ class _HomeState extends State<Home> {
 
     if (recognitions.isNotEmpty) {
       print(recognitions);
-      /*setState(() {
+      setState(() {
         _result = Result.fromMap(recognitions.first);
-      });*/
+      });
     }
   }
 
