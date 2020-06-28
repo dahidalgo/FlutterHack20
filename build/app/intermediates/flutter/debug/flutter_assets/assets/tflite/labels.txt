@@ -1,3 +1,4 @@
-0 Botellas
-1 Latas
-2 Cartón
+Botellas
+Latas
+Cartón
+Otros
