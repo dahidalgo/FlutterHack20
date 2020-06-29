@@ -48,6 +48,9 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/img/
+    - assets/img/botellas/
+    - assets/img/carton/
+    - assets/img/lata/
     - assets/tflite/
 
   # An image asset can refer to one or more resolution-specific "variants", see
