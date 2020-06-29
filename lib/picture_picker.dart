@@ -69,7 +69,7 @@ class PicturePicker extends StatelessWidget {
                 onTap: onTap,
               ),
             ),
-            Positioned(
+           Positioned(
               bottom: 4,
               right: 4,
               child: Container(
@@ -81,7 +81,7 @@ class PicturePicker extends StatelessWidget {
                       color: Theme.of(context).backgroundColor,
                     )),
                 child: IconButton(
-                  icon: Icon(Icons.photo_camera),
+                  icon: Icon(Icons.photo_camera, color: Colors.green[600],),
                   onPressed: onTap,
                 ),
               ),
@@ -101,7 +101,7 @@ class PicturePicker extends StatelessWidget {
             : BorderRadius.circular(12),
         child: Image.file(
           imageFile,
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
         ),
       ),
     );
@@ -116,7 +116,7 @@ class PicturePicker extends StatelessWidget {
             : BorderRadius.circular(12),
         child: Image.network(
           imageUrl,
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
         ),
       ),
     );
@@ -124,9 +124,14 @@ class PicturePicker extends StatelessWidget {
 
   Widget buildPlaceholderImage(BuildContext context) {
     return Center(
-        child: Image.asset(
+        child: Container(
+          margin: EdgeInsets.all(40),
+          padding: EdgeInsets.all(30),
+          decoration: BoxDecoration(color: Colors.green[600],shape: BoxShape.circle,),
+          child: Image.asset(
       'assets/img/upload.png',
       fit: BoxFit.contain,
-    ));
+    ),
+        ));
   }
 }
